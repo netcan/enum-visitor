@@ -44,7 +44,7 @@ enum Shape {
 impl Shape {
     fn area(&self) -> f64 {
         // 由 #[derive(VisitEnum)] 在当前模块注入的局部宏：
-        visit_with!(self, |s| s.area())
+        visit!(self, |s| s.area())
     }
 }
 
@@ -57,4 +57,3 @@ fn main() {
     assert_eq!(r.area(), 12.0);
     assert_eq!(t.area(), 10.0);
 }
-

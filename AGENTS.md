@@ -5,7 +5,7 @@ This Rust workspace provides a small library that emulates a C++ `std::visit`-li
 ## Project Structure & Module Organization
 - Root: Cargo workspace (`Cargo.toml`), `README.md`, `LICENSE`.
 - Crates:
-  - `enum-visitor/`: end‑user crate exporting `VisitEnum` and a universal `visit_with!` macro. Examples in `enum-visitor/examples/`.
+- `enum-visitor/`: end‑user crate exporting `VisitEnum` and a universal `visit!` macro. Examples in `enum-visitor/examples/`.
   - `enum-visitor-derive/`: proc‑macro crate implementing `#[derive(VisitEnum)]`.
 - Tests live under each crate (`<crate>/tests/`) or inline via `#[cfg(test)]`.
 
@@ -19,7 +19,7 @@ This Rust workspace provides a small library that emulates a C++ `std::visit`-li
 ## Coding Style & Naming Conventions
 - Rust 2021 edition; default `rustfmt` (4‑space indent, trailing commas where sensible).
 - Public API minimal and documented with `///` and examples.
-- Macros: snake_case names; derive generates `visit_with_<enum_snake>!` and a local `visit_with!` in the enum’s module. To avoid name collisions, place different enums in separate `mod`s or use the unique macro name.
+- Macros: snake_case names; derive generates `visit_<enum_snake>!` and a local `visit!` in the enum’s module. To avoid name collisions, place different enums in separate `mod`s or use the unique macro name.
 - Avoid `unsafe` unless justified; prefer clear, small macros over cleverness.
 
 ## Testing Guidelines

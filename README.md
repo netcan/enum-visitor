@@ -5,8 +5,8 @@ A tiny Rust library that emulates a C++ `std::visit`-like experience using macro
 English is the primary README. 中文版请见 README.zh.md.
 
 ## Features
-- Universal macro `visit_with!` that expands to a `match` over explicit variants.
-- Derive `#[derive(VisitEnum)]` to generate a local macro so you can simply write `visit_with!(self, |v| ...)` inside the enum’s module/impl.
+- Universal macro `visit!` that expands to a `match` over explicit variants.
+- Derive `#[derive(VisitEnum)]` to generate a local macro so you can simply write `visit!(self, |v| ...)` inside the enum’s module/impl.
 
 ## Quick Start
 Add dependency (path example while unpublished):
@@ -32,21 +32,21 @@ impl Triangle { fn area(&self) -> f64 { 0.5 * self.base * self.height } }
 enum Shape { Circle(Circle), Rectangle(Rectangle), Triangle(Triangle) }
 
 impl Shape {
-    fn area(&self) -> f64 { visit_with!(self, |s| s.area()) }
+    fn area(&self) -> f64 { visit!(self, |s| s.area()) }
 }
 ```
 
 Universal macro (no derive):
 
 ```rust
-enum_visitor::visit_with!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area());
+enum_visitor::visit!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area());
 ```
 
 Run the example: `cargo run -p enum-visitor --example shapes`.
 
 ## Notes & Limitations
 - Supported variants: tuple variants with exactly one field (e.g., `Variant(T)`).
-- The derive creates two macros in the enum’s module: `visit_with_<enum_snake>!` and a local `visit_with!`. To avoid name clashes, place different enums in separate modules or use the unique macro name.
+- The derive creates two macros in the enum’s module: `visit_<enum_snake>!` and a local `visit!`. To avoid name clashes, place different enums in separate modules or use the unique macro name.
 
 ## License
 MIT © netcan

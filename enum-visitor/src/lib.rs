@@ -1,8 +1,8 @@
 //! enum-visitor: emulate a `std::visit`-like experience with macros.
 //!
 //! Two ways to use:
-//! - `visit_with!(expr, Enum, [V1, V2, ...], |binder| expr)` universal macro
-//! - `#[derive(VisitEnum)]` -> `visit_with_<enum>!(expr, |binder| expr)`
+//! - `visit!(expr, Enum, [V1, V2, ...], |binder| expr)` universal macro
+//! - `#[derive(VisitEnum)]` -> `visit_<enum>!(expr, |binder| expr)`
 
 pub use enum_visitor_derive::VisitEnum;
 
@@ -11,7 +11,7 @@ pub use enum_visitor_derive::VisitEnum;
 ///
 /// 约束：当前仅支持“单元素元组变体”（如 `Enum::Variant(T)`）。
 #[macro_export]
-macro_rules! visit_with {
+macro_rules! visit {
     // 表达式体形式
     ($expr:expr, $Enum:path, [$($Var:ident),+ $(,)?], |$b:pat_param| $body:expr $(,)?) => {
         match $expr {

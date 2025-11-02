@@ -17,7 +17,7 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
 
     let enum_ident = input.ident;
     let enum_name = enum_ident.to_string();
-    let macro_ident = format_ident!("visit_with_{}", to_snake_case(&enum_name));
+    let macro_ident = format_ident!("visit_{}", to_snake_case(&enum_name));
 
     let data_enum = match input.data {
         Data::Enum(e) => e,
@@ -62,7 +62,7 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
     // name to avoid collisions.
     let gen = quote! {
         // A helper macro to visit all variants of this enum.
-        // Usage: `visit_with_<enum_snake>!(expr, |v| <use v> )`
+        // Usage: `visit_<enum_snake>!(expr, |v| <use v> )`
         #[allow(non_snake_case, unused_macros)]
         macro_rules! #macro_ident {
             ($expr:expr, |$v:pat_param| $body:expr $(,)?) => {{
@@ -79,7 +79,7 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
 
         // Convenience short name within the same module.
         #[allow(unused_macros)]
-        macro_rules! visit_with {
+        macro_rules! visit {
             ($expr:expr, |$v:pat_param| $body:expr $(,)?) => { #macro_ident!($expr, |$v| $body) };
             ($expr:expr, |$v:pat_param| { $($tt:tt)* } $(,)?) => { #macro_ident!($expr, |$v| { $($tt)* }) };
         }
