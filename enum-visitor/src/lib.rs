@@ -13,16 +13,15 @@ pub use enum_visitor_derive::VisitEnum;
 #[macro_export]
 macro_rules! visit_with {
     // 表达式体形式
-    ($expr:expr, $Enum:path, [$($Var:ident),+ $(,)?], |$b:pat| $body:expr $(,)?) => {
+    ($expr:expr, $Enum:path, [$($Var:ident),+ $(,)?], |$b:pat_param| $body:expr $(,)?) => {
         match $expr {
             $( $Enum::$Var($b) => { $body } ),+
         }
     };
     // 块体形式
-    ($expr:expr, $Enum:path, [$($Var:ident),+ $(,)?], |$b:pat| { $($body:tt)* } $(,)?) => {
+    ($expr:expr, $Enum:path, [$($Var:ident),+ $(,)?], |$b:pat_param| { $($body:tt)* } $(,)?) => {
         match $expr {
             $( $Enum::$Var($b) => { $($body)* } ),+
         }
     };
 }
-
