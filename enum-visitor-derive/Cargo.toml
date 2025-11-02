@@ -5,6 +5,9 @@ edition = "2021"
 description = "Proc-macro derive to generate visit_<enum>! helper macro for enums."
 license = "MIT"
 authors = ["netcan"]
+readme = "README.md"
+keywords = ["proc-macro", "macro", "enum", "visit"]
+categories = ["rust-patterns"]
 
 [lib]
 proc-macro = true
