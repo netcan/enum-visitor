@@ -14,6 +14,7 @@ use syn::{parse_macro_input, Data, DeriveInput, Fields};
 #[proc_macro_derive(VisitEnum)]
 pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
+    let original_item = quote! { #input };
 
     let enum_ident = input.ident;
     let enum_name = enum_ident.to_string();
@@ -32,7 +33,8 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
     };
 
     // Collect variant idents and ensure single unnamed field
-    let mut arms = Vec::new();
+    let mut arms_expr = Vec::new();
+    let mut arms_block = Vec::new();
 
     for variant in data_enum.variants.iter() {
         let v_ident = &variant.ident;
@@ -50,22 +52,29 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
             }
         }
 
-        // Each arm will bind the inner value to the user-provided identifier `$v`
-        // and then evaluate `$body` as-is. 这里直接把用户的 `|v| body` 复用到每个分支。
-        arms.push(quote! { #enum_ident::#v_ident($v) => { $body } });
+        // Expression-body arm: use `$v` and `$body` from the macro invocation site.
+        arms_expr.push(quote! { #enum_ident::#v_ident($v) => { $body } });
+        // Block-body arm: use `$v` and `$($tt)*` from the invocation site.
+        arms_block.push(quote! { #enum_ident::#v_ident($v) => { $($tt)* } });
     }
 
     // Build the macro definition. We create a local macro (not exported) so its
     // name stays within the user's crate namespace. The name encodes the enum
     // name to avoid collisions.
     let gen = quote! {
+        #original_item
         // A helper macro to visit all variants of this enum.
         // Usage: `visit_with_<enum_snake>!(expr, |v| <use v> )`
         #[allow(non_snake_case, unused_macros)]
         macro_rules! #macro_ident {
-            ($expr:expr, |$v:ident| $body:expr $(,)?) => {{
+            ($expr:expr, |$v:pat| $body:expr $(,)?) => {{
                 match $expr {
-                    #( #arms ),*
+                    #( #arms_expr ),*
+                }
+            }};
+            ($expr:expr, |$v:pat| { $($tt:tt)* } $(,)?) => {{
+                match $expr {
+                    #( #arms_block ),*
                 }
             }};
         }
@@ -73,9 +82,8 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
         // Convenience short name within the same module.
         #[allow(unused_macros)]
         macro_rules! visit_with {
-            ($expr:expr, |$v:ident| $body:expr $(,)?) => {
-                #macro_ident!($expr, |$v| $body)
-            };
+            ($expr:expr, |$v:pat| $body:expr $(,)?) => { #macro_ident!($expr, |$v| $body) };
+            ($expr:expr, |$v:pat| { $($tt:tt)* } $(,)?) => { #macro_ident!($expr, |$v| { $($tt)* }) };
         }
     };
 
