@@ -22,12 +22,9 @@ pub fn derive_visit_enum(input: TokenStream) -> TokenStream {
     let data_enum = match input.data {
         Data::Enum(e) => e,
         _ => {
-            return syn::Error::new_spanned(
-                enum_ident,
-                "VisitEnum can only be derived for enums",
-            )
-            .to_compile_error()
-            .into();
+            return syn::Error::new_spanned(enum_ident, "VisitEnum can only be derived for enums")
+                .to_compile_error()
+                .into();
         }
     };
 
@@ -93,8 +90,12 @@ fn to_snake_case(name: &str) -> String {
     let mut out = String::new();
     for (i, ch) in name.chars().enumerate() {
         if ch.is_uppercase() {
-            if i != 0 { out.push('_'); }
-            for c in ch.to_lowercase() { out.push(c); }
+            if i != 0 {
+                out.push('_');
+            }
+            for c in ch.to_lowercase() {
+                out.push(c);
+            }
         } else {
             out.push(ch);
         }

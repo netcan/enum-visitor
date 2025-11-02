@@ -50,8 +50,14 @@ impl Shape {
 
 fn main() {
     let c = Shape::Circle(Circle { radius: 2.0 });
-    let r = Shape::Rectangle(Rectangle { width: 3.0, height: 4.0 });
-    let t = Shape::Triangle(Triangle { base: 10.0, height: 2.0 });
+    let r = Shape::Rectangle(Rectangle {
+        width: 3.0,
+        height: 4.0,
+    });
+    let t = Shape::Triangle(Triangle {
+        base: 10.0,
+        height: 2.0,
+    });
 
     assert!((c.area() - (PI * 4.0)).abs() < 1e-9);
     assert_eq!(r.area(), 12.0);
