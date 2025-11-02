@@ -47,7 +47,7 @@ enum_visitor::visit!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area());
 ## 说明与限制
 - 暂仅支持“单元素元组变体”（如 `Variant(T)`）。
 - 派生会在枚举模块内生成两个宏：`visit_<enum_snake>!` 与局部 `visit!`。
-  若同一模块对多个枚举同时派生，`visit_with!` 可能重名；请将枚举放入不同模块，
+  若同一模块对多个枚举同时派生，`visit!` 可能重名；请将枚举放入不同模块，
   或使用唯一名宏。
 
 ## 许可证

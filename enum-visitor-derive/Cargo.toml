@@ -2,7 +2,7 @@
 name = "enum-visitor-derive"
 version = "0.1.0"
 edition = "2021"
-description = "Proc-macro derive to generate visit_with_<enum>! helper macro for enums."
+description = "Proc-macro derive to generate visit_<enum>! helper macro for enums."
 license = "MIT"
 authors = ["netcan"]
 

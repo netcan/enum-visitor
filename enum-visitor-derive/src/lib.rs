@@ -5,8 +5,8 @@ use syn::{parse_macro_input, Data, DeriveInput, Fields};
 /// Derive macro to generate helper macros for a given enum.
 ///
 /// It generates two local macros in the same module as the enum:
-/// - `visit_with_<enum_snake>!(expr, |v| body)` — unique name, avoids conflicts;
-/// - `visit_with!(expr, |v| body)` — convenient short name for use in the
+/// - `visit_<enum_snake>!(expr, |v| body)` — unique name, avoids conflicts;
+/// - `visit!(expr, |v| body)` — convenient short name for use in the
 ///   same module/impl; note: if you derive this on multiple enums in the same
 ///   module，该宏名会发生冲突，请将枚举分到不同 `mod` 中或使用带枚举名的宏。
 ///
