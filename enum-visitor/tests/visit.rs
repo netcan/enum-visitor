@@ -69,5 +69,9 @@ mod v_mut_test {
         let mut v = V::A(1);
         v.inc();
         assert_eq!(v.get(), 2);
+
+        let mut w = V::B(10);
+        w.inc();
+        assert_eq!(w.get(), 11);
     }
 }
