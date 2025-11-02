@@ -1,19 +1,23 @@
 # enum-visitor
 
+[![Crates.io](https://img.shields.io/crates/v/enum-visitor.svg)](https://crates.io/crates/enum-visitor)
+[![docs.rs](https://docs.rs/enum-visitor/badge.svg)](https://docs.rs/enum-visitor)
+[![CI](https://github.com/netcan/enum-visitor/actions/workflows/ci.yml/badge.svg)](https://github.com/netcan/enum-visitor/actions/workflows/ci.yml)
+
 一个模仿 C++ `std::visit` 思想的轻量 Rust 库，通过宏与派生宏提供接近的使用体验。
 
-英文为主文档，中文版本见本文件。English version: README.md
+英文为主文档（README.md）。
 
 ## 特性
 - 通用宏 `visit!`：基于显式的枚举与变体列表生成 `match` 展开。
 - 派生宏 `#[derive(VisitEnum)]`：在枚举所在模块生成局部宏，使你可以在 impl 内直接写 `visit!(self, |v| ...)`。
 
-## 快速开始
-依赖（本仓库未发布到 crates.io，示例使用本地路径）：
+## 安装
+在 Cargo.toml 中添加依赖：
 
 ```toml
 [dependencies]
-enum-visitor = { path = "./enum-visitor" }
+enum-visitor = "0.1"
 ```
 
 派生用法（最贴近 `std::visit` 的书写）：
@@ -42,7 +46,7 @@ impl Shape {
 enum_visitor::visit!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area());
 ```
 
-运行示例：`cargo run -p enum-visitor --example shapes`。
+运行仓库自带示例：`cargo run -p enum-visitor --example shapes`。
 
 ## 说明与限制
 - 暂仅支持“单元素元组变体”（如 `Variant(T)`）。
