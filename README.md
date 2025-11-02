@@ -1,44 +1,52 @@
 # enum-visitor
 
-一个模仿 C++ `std::visit` 思想的轻量 Rust 库，提供：
+A tiny Rust library that emulates a C++ `std::visit`-like experience using macros and a proc-macro derive.
 
-- 通用宏 `visit_with!`：基于枚举/变体列表生成 `match` 展开。
-- 派生宏 `#[derive(VisitEnum)]`：为具体枚举生成专用宏 `visit_with_<enum>!`，
-  以便只写一次闭包体便可匹配所有变体。
+English is the primary README. 中文版请见 README.zh.md.
 
-注意：由于 Rust 目前缺乏对“泛型闭包”的直接支持，想要像 C++ `std::visit` 那样
-不指明枚举类型就自动展开所有变体在稳定版 Rust 中不可行。本库提供两种务实方案：
+## Features
+- Universal macro `visit_with!` that expands to a `match` over explicit variants.
+- Derive `#[derive(VisitEnum)]` to generate a local macro so you can simply write `visit_with!(self, |v| ...)` inside the enum’s module/impl.
 
-1) 通用宏（无需 derive）：
+## Quick Start
+Add dependency (path example while unpublished):
 
-```rust
-visit_with!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area())
+```toml
+[dependencies]
+enum-visitor = { path = "./enum-visitor" }
 ```
 
-2) 专用宏（需 derive，最贴近题述“`visit_with!(self, |s| s.area())`”的写法）：
+Derive-based usage (closest to C++ `std::visit` ergonomics):
 
 ```rust
+use std::f64::consts::PI;
+
+struct Circle { radius: f64 }
+impl Circle { fn area(&self) -> f64 { PI * self.radius * self.radius } }
+struct Rectangle { width: f64, height: f64 }
+impl Rectangle { fn area(&self) -> f64 { self.width * self.height } }
+struct Triangle { base: f64, height: f64 }
+impl Triangle { fn area(&self) -> f64 { 0.5 * self.base * self.height } }
+
 #[derive(enum_visitor::VisitEnum)]
 enum Shape { Circle(Circle), Rectangle(Rectangle), Triangle(Triangle) }
 
 impl Shape {
-    fn area(&self) -> f64 {
-        // 派生宏会在此模块内注入一个局部宏 `visit_with!`
-        visit_with!(self, |s| s.area())
-    }
+    fn area(&self) -> f64 { visit_with!(self, |s| s.area()) }
 }
 ```
 
-两者都会在编译期展开为等价的 `match`：
+Universal macro (no derive):
 
 ```rust
-match self {
-    Shape::Circle(s) => s.area(),
-    Shape::Rectangle(s) => s.area(),
-    Shape::Triangle(s) => s.area(),
-}
+enum_visitor::visit_with!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area());
 ```
 
-参见 `enum-visitor/examples/shapes.rs` 获取完整示例。
+Run the example: `cargo run -p enum-visitor --example shapes`.
 
-许可：MIT（版权归 netcan 所有）。
+## Notes & Limitations
+- Supported variants: tuple variants with exactly one field (e.g., `Variant(T)`).
+- The derive creates two macros in the enum’s module: `visit_with_<enum_snake>!` and a local `visit_with!`. To avoid name clashes, place different enums in separate modules or use the unique macro name.
+
+## License
+MIT © netcan

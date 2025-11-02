@@ -44,7 +44,7 @@ enum Shape {
 
 impl Shape {
     fn area(&self) -> f64 {
-        visit_with!(self, |s| s.area());
+        visit!(self, |s| s.area());
         // 这里宏展开后，如下：
         // match self {
         //     Shape::Circle(s) => s.area(),

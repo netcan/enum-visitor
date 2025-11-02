@@ -1,0 +1,55 @@
+# enum-visitor
+
+一个模仿 C++ `std::visit` 思想的轻量 Rust 库，通过宏与派生宏提供接近的使用体验。
+
+英文为主文档，中文版本见本文件。English version: README.md
+
+## 特性
+- 通用宏 `visit_with!`：基于显式的枚举与变体列表生成 `match` 展开。
+- 派生宏 `#[derive(VisitEnum)]`：在枚举所在模块生成局部宏，使你可以在 impl 内直接写 `visit_with!(self, |v| ...)`。
+
+## 快速开始
+依赖（本仓库未发布到 crates.io，示例使用本地路径）：
+
+```toml
+[dependencies]
+enum-visitor = { path = "./enum-visitor" }
+```
+
+派生用法（最贴近 `std::visit` 的书写）：
+
+```rust
+use std::f64::consts::PI;
+
+struct Circle { radius: f64 }
+impl Circle { fn area(&self) -> f64 { PI * self.radius * self.radius } }
+struct Rectangle { width: f64, height: f64 }
+impl Rectangle { fn area(&self) -> f64 { self.width * self.height } }
+struct Triangle { base: f64, height: f64 }
+impl Triangle { fn area(&self) -> f64 { 0.5 * self.base * self.height } }
+
+#[derive(enum_visitor::VisitEnum)]
+enum Shape { Circle(Circle), Rectangle(Rectangle), Triangle(Triangle) }
+
+impl Shape {
+    fn area(&self) -> f64 { visit_with!(self, |s| s.area()) }
+}
+```
+
+通用宏（无需 derive）：
+
+```rust
+enum_visitor::visit_with!(expr, Shape, [Circle, Rectangle, Triangle], |s| s.area());
+```
+
+运行示例：`cargo run -p enum-visitor --example shapes`。
+
+## 说明与限制
+- 暂仅支持“单元素元组变体”（如 `Variant(T)`）。
+- 派生会在枚举模块内生成两个宏：`visit_with_<enum_snake>!` 与局部 `visit_with!`。
+  若同一模块对多个枚举同时派生，`visit_with!` 可能重名；请将枚举放入不同模块，
+  或使用唯一名宏。
+
+## 许可证
+MIT（版权所有 © netcan）
+
