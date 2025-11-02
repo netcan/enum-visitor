@@ -1,0 +1,57 @@
+这是一个模仿c++的std::visit接口rust库，使用2021 edition，用例如下：
+
+
+use std::f64::consts::PI;
+// ----------------- 各个形状 -----------------
+struct Circle {
+    radius: f64,
+}
+
+impl Circle {
+    fn area(&self) -> f64 {
+        PI * self.radius * self.radius
+    }
+}
+
+struct Rectangle {
+    width: f64,
+    height: f64,
+}
+
+impl Rectangle {
+    fn area(&self) -> f64 {
+        self.width * self.height
+    }
+}
+
+struct Triangle {
+    base: f64,
+    height: f64,
+}
+
+impl Triangle {
+    fn area(&self) -> f64 {
+        0.5 * self.base * self.height
+    }
+}
+
+// ----------------- Shape 枚举 -----------------
+enum Shape {
+    Circle(Circle),
+    Rectangle(Rectangle),
+    Triangle(Triangle),
+}
+
+impl Shape {
+    fn area(&self) -> f64 {
+        visit_with!(self, |s| s.area());
+        // 这里宏展开后，如下：
+        // match self {
+        //     Shape::Circle(s) => s.area(),
+        //     Shape::Rectangle(s) => s.area(),
+        //     Shape::Triangle(s) => s.area(),
+        // }
+    }
+}
+
+请初始化项目，并以git的形式管理。添加MIT协议，署名netcan。

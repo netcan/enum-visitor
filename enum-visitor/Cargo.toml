@@ -1,0 +1,10 @@
+[package]
+name = "enum-visitor"
+version = "0.1.0"
+edition = "2021"
+description = "A small helper to generate visit-like match for enums, inspired by C++ std::visit."
+license = "MIT"
+authors = ["netcan"]
+
+[dependencies]
+enum-visitor-derive = { path = "../enum-visitor-derive" }
