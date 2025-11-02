@@ -7,7 +7,10 @@ license = "MIT"
 authors = ["netcan"]
 readme = "README.md"
 keywords = ["proc-macro", "macro", "enum", "visit"]
-categories = ["rust-patterns"]
+categories = ["development-tools::procedural-macro"]
+repository = "https://github.com/netcan/enum-visitor"
+homepage = "https://github.com/netcan/enum-visitor"
+documentation = "https://docs.rs/enum-visitor-derive"
 
 [lib]
 proc-macro = true

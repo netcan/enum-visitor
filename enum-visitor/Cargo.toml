@@ -7,7 +7,10 @@ license = "MIT"
 authors = ["netcan"]
 readme = "README.md"
 keywords = ["macro", "enum", "visit", "pattern-matching"]
-categories = ["rust-patterns"]
+categories = ["development-tools"]
+repository = "https://github.com/netcan/enum-visitor"
+homepage = "https://github.com/netcan/enum-visitor"
+documentation = "https://docs.rs/enum-visitor"
 
 [dependencies]
-enum-visitor-derive = { path = "../enum-visitor-derive" }
+enum-visitor-derive = { version = "0.1", path = "../enum-visitor-derive" }
